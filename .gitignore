@@ -1,0 +1,21 @@
+# Arquivos compilados do Java
+*.class
+
+# Arquivos de log
+*.log
+
+# Pastas de build do NetBeans
+/nbproject/private/
+/build/
+/dist/
+
+# Arquivos de cache e configurações do usuário
+.nb-gradle/
+/nb-run.xml
+buildSrc/
+!buildSrc/build.gradle
+!buildSrc/settings.gradle
+
+# Banco de dados local (opcional, mas recomendado)
+# Se você quiser que cada pessoa que baixe o projeto crie seu próprio banco, ignore o arquivo.
+.db

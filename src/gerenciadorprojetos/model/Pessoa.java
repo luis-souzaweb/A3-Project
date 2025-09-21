@@ -13,7 +13,7 @@ public class Pessoa {
     public String getNomeCompleto() { return nomeCompleto; }
     public String getCpf() { return cpf; }
 
-    // --- SETTERS ADICIONADOS ---
+    // --- SETTERS ---
     public void setNomeCompleto(String nomeCompleto) {
         this.nomeCompleto = nomeCompleto;
     }

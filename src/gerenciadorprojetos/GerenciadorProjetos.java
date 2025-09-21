@@ -1,7 +1,7 @@
 package gerenciadorprojetos;
 
 import gerenciadorprojetos.controller.AppController;
-import gerenciadorprojetos.database.Database; // IMPORT NOVO
+import gerenciadorprojetos.database.Database;
 import javax.swing.SwingUtilities;
 
 public class GerenciadorProjetos {

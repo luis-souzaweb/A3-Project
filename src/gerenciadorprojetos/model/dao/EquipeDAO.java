@@ -104,6 +104,22 @@ public class EquipeDAO {
         }
         return equipes;
     }
+        // --- NOVO MÉTODO DE VALIDAÇÃO ---
+    public boolean nomeJaExiste(String nome) {
+        String sql = "SELECT COUNT(*) FROM equipes WHERE nome = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, nome);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao verificar nome da equipe: " + e.getMessage());
+        }
+        return false;
+    }
 
     private void carregarMembrosDaEquipe(Connection conn, Equipe equipe) throws SQLException {
         String sql = "SELECT u.* FROM usuarios u " +

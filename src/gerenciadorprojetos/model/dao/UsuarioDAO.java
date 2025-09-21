@@ -22,6 +22,7 @@ public class UsuarioDAO {
         } catch (SQLException e) {
             System.err.println("Erro ao inserir usuário: " + e.getMessage());
         }
+        
     }
 
     public void atualizar(Usuario usuario) {
@@ -65,7 +66,6 @@ public class UsuarioDAO {
                     rs.getString("email"), rs.getString("cargo"),
                     rs.getString("login"), rs.getString("senha")
                 );
-                // --- LINHA CRÍTICA QUE CONSERTA O BUG ---
                 usuario.setId(rs.getInt("id")); 
                 usuarios.add(usuario);
             }
@@ -73,5 +73,21 @@ public class UsuarioDAO {
             System.err.println("Erro ao listar usuários: " + e.getMessage());
         }
         return usuarios;
+    }
+        public boolean cpfJaExiste(String cpf) {
+        String sql = "SELECT COUNT(*) FROM usuarios WHERE cpf = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, cpf);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                // Se o resultado for maior que 0, significa que o CPF já existe.
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao verificar CPF: " + e.getMessage());
+        }
+        return false; // Retorna false em caso de erro para não bloquear indevidamente
     }
 }

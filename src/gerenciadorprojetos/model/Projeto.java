@@ -5,12 +5,12 @@ public class Projeto {
     private String nome, descricao, dataInicio, dataTerminoPrevista, status;
     private Usuario gerente;
 
-    public Projeto(String nome, String descricao, String dataInicio, String dataTerminoPrevista, Usuario gerente) {
+    public Projeto(String nome, String descricao, String dataInicio, String dataTerminoPrevista, String status, Usuario gerente) {
         this.nome = nome;
         this.descricao = descricao;
         this.dataInicio = dataInicio;
         this.dataTerminoPrevista = dataTerminoPrevista;
-        this.status = "Planejado";
+        this.status = status;
         this.gerente = gerente;
     }
     

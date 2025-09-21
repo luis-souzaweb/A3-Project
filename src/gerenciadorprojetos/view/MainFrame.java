@@ -1,61 +1,69 @@
 package gerenciadorprojetos.view;
 
-import gerenciadorprojetos.model.Equipe;
-import gerenciadorprojetos.model.Projeto;
-import gerenciadorprojetos.model.Usuario;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import gerenciadorprojetos.model.Equipe;
+import gerenciadorprojetos.model.Projeto;
+import gerenciadorprojetos.model.Usuario;
 
 public class MainFrame extends JFrame {
 
     // --- ATRIBUTOS (VARIÁVEIS) DA CLASSE ---
     private JButton btnAdicionarUsuario, btnAdicionarProjeto, btnAdicionarEquipe, btnAdicionarMembro;
-    private JButton btnEditar, btnExcluir;
+    private JButton btnEditar, btnExcluir, btnVerMembros;
     private JTable tabelaUsuarios, tabelaProjetos, tabelaEquipes;
     private DefaultTableModel modelUsuarios, modelProjetos, modelEquipes;
     private JTabbedPane painelAbas;
+    private JTextField campoBusca;
 
-    // --- CONSTRUTOR DA CLASSE ---
+    // --- CONSTRUTOR DA CLASSE (Onde a janela é montada) ---
     public MainFrame() {
         setTitle("Sistema de Gerenciamento de Projetos");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        
-        // Painel de botões superior (Ações de Adicionar)
+        setLayout(new BorderLayout());
+
+        // PAINEL DE BOTÕES SUPERIOR
         JPanel painelBotoesAdicionar = new JPanel(new FlowLayout(FlowLayout.LEFT));
         btnAdicionarUsuario = new JButton("Adicionar Usuário");
         btnAdicionarProjeto = new JButton("Adicionar Projeto");
         btnAdicionarEquipe = new JButton("Adicionar Equipe");
         btnAdicionarMembro = new JButton("Adicionar Membro à Equipe");
-        
         painelBotoesAdicionar.add(btnAdicionarUsuario);
         painelBotoesAdicionar.add(btnAdicionarProjeto);
         painelBotoesAdicionar.add(btnAdicionarEquipe);
         painelBotoesAdicionar.add(btnAdicionarMembro);
-        
         add(painelBotoesAdicionar, BorderLayout.NORTH);
 
-        // Painel com Abas
+        // PAINEL CENTRAL QUE CONTÉM A BUSCA E AS ABAS
+        JPanel painelCentral = new JPanel(new BorderLayout());
+        
+        // PAINEL DE BUSCA
+        JPanel painelBusca = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        painelBusca.add(new JLabel("Buscar:"));
+        campoBusca = new JTextField(30);
+        painelBusca.add(campoBusca);
+        painelCentral.add(painelBusca, BorderLayout.NORTH);
+        
+        // PAINEL COM ABAS
         painelAbas = new JTabbedPane();
 
         // Aba de Usuários
         modelUsuarios = new DefaultTableModel(new Object[]{"ID", "Nome", "CPF", "Email", "Cargo"}, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) { return false; } // Não deixa editar na tabela
+            @Override public boolean isCellEditable(int row, int column) { return false; }
         };
         tabelaUsuarios = new JTable(modelUsuarios);
-        esconderColuna(tabelaUsuarios, 0); // Esconde a coluna de ID
+        esconderColuna(tabelaUsuarios, 0);
         painelAbas.addTab("Usuários", new JScrollPane(tabelaUsuarios));
 
         // Aba de Projetos
         modelProjetos = new DefaultTableModel(new Object[]{"ID", "Nome", "Descrição", "Status", "Gerente"}, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) { return false; }
+            @Override public boolean isCellEditable(int row, int column) { return false; }
         };
         tabelaProjetos = new JTable(modelProjetos);
         esconderColuna(tabelaProjetos, 0);
@@ -63,45 +71,46 @@ public class MainFrame extends JFrame {
 
         // Aba de Equipes
         modelEquipes = new DefaultTableModel(new Object[]{"ID", "Nome", "Descrição", "Membros"}, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) { return false; }
+            @Override public boolean isCellEditable(int row, int column) { return false; }
         };
         tabelaEquipes = new JTable(modelEquipes);
         esconderColuna(tabelaEquipes, 0);
         painelAbas.addTab("Equipes", new JScrollPane(tabelaEquipes));
         
-        add(painelAbas, BorderLayout.CENTER);
+        painelCentral.add(painelAbas, BorderLayout.CENTER);
+        add(painelCentral, BorderLayout.CENTER);
         
-        // Painel de botões inferior (Ações de Edição)
+        // PAINEL DE BOTÕES INFERIOR
         JPanel painelBotoesEdicao = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        btnVerMembros = new JButton("Ver Membros");
         btnEditar = new JButton("Editar Selecionado");
         btnExcluir = new JButton("Excluir Selecionado");
+        
+        btnVerMembros.setEnabled(false);
         btnEditar.setEnabled(false);
         btnExcluir.setEnabled(false);
         
+        painelBotoesEdicao.add(btnVerMembros);
         painelBotoesEdicao.add(btnEditar);
         painelBotoesEdicao.add(btnExcluir);
-        
         add(painelBotoesEdicao, BorderLayout.SOUTH);
     }
     
-    // --- MÉTODOS DE ACESSO (GETTERS) PARA O CONTROLLER ---
-
+    // --- GETTERS PARA O CONTROLLER ---
+    public JTextField getCampoBusca() { return campoBusca; }
     public JButton getBtnAdicionarUsuario() { return btnAdicionarUsuario; }
     public JButton getBtnAdicionarProjeto() { return btnAdicionarProjeto; }
     public JButton getBtnAdicionarEquipe() { return btnAdicionarEquipe; }
     public JButton getBtnAdicionarMembro() { return btnAdicionarMembro; }
     public JButton getBtnEditar() { return btnEditar; }
     public JButton getBtnExcluir() { return btnExcluir; }
-    
+    public JButton getBtnVerMembros() { return btnVerMembros; }
     public JTable getTabelaUsuarios() { return tabelaUsuarios; }
     public JTable getTabelaProjetos() { return tabelaProjetos; }
     public JTable getTabelaEquipes() { return tabelaEquipes; }
-    
     public JTabbedPane getPainelAbas() { return painelAbas; }
 
     // --- MÉTODOS PARA ATUALIZAR AS TABELAS ---
-
     public void atualizarTabelaUsuarios(List<Usuario> usuarios) {
         modelUsuarios.setRowCount(0);
         for (Usuario u : usuarios) {

@@ -57,15 +57,16 @@ public class ProjetoDAO {
                 String nomeGerente = rs.getString("gerente_nome");
                 if (nomeGerente != null) {
                     gerente = new Usuario(nomeGerente, "", "", "", "", "");
-                    gerente.setId(gerenteId); 
+                    gerente.setId(gerenteId);
                 }
                 
                 Projeto projeto = new Projeto(
                     rs.getString("nome"), rs.getString("descricao"), 
-                    rs.getString("dataInicio"), rs.getString("dataTerminoPrevista"), gerente
+                    rs.getString("dataInicio"), rs.getString("dataTerminoPrevista"),
+                    rs.getString("status"), // Usando o novo construtor
+                    gerente
                 );
                 projeto.setId(rs.getInt("id"));
-                projeto.setStatus(rs.getString("status"));
                 projetos.add(projeto);
             }
         } catch (SQLException e) { System.err.println("Erro ao listar projetos: " + e.getMessage()); }

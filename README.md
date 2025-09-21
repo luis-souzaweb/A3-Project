@@ -1,8 +1,8 @@
-\# 🚀 Gerenciador de Projetos Simplificado
+\#  Gerenciador de Projetos Simplificado
 
 
 
-\## 📝 Descrição
+\##  Descrição
 
 
 
@@ -18,7 +18,7 @@ A aplicação é um sistema de desktop simples para gerenciar usuários, projeto
 
 
 
-\## ✨ Funcionalidades
+\##  Funcionalidades
 
 
 
@@ -44,7 +44,7 @@ A aplicação é um sistema de desktop simples para gerenciar usuários, projeto
 
 
 
-\## 🛠️ Tecnologias Utilizadas
+\##  Tecnologias Utilizadas
 
 
 
@@ -66,7 +66,7 @@ A aplicação é um sistema de desktop simples para gerenciar usuários, projeto
 
 
 
-\## 🎓 Principais Conceitos Demonstrados
+\##  Principais Conceitos Demonstrados
 
 
 
@@ -106,7 +106,7 @@ A aplicação é um sistema de desktop simples para gerenciar usuários, projeto
 
 
 
-\## ⚙️ Como Executar o Projeto
+\##  Como Executar o Projeto
 
 
 

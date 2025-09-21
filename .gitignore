@@ -7,7 +7,10 @@
 # Pastas de build do NetBeans
 /nbproject/private/
 /build/
-/dist/
+
+# Ignora tudo na pasta dist, EXCETO os arquivos .jar
+/dist/*
+!/dist/*.jar
 
 # Arquivos de cache e configurações do usuário
 .nb-gradle/
@@ -16,6 +19,6 @@ buildSrc/
 !buildSrc/build.gradle
 !buildSrc/settings.gradle
 
-# Banco de dados local (opcional, mas recomendado)
-# Se você quiser que cada pessoa que baixe o projeto crie seu próprio banco, ignore o arquivo.
-.db
+# Banco de dados local
+# Ignora qualquer arquivo que termine com .db
+*.db

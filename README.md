@@ -1,23 +1,23 @@
-# Gerenciador de Projetos
+# Gerenciador de Projetos Simplificado
 
-**Status do Projeto:** Concluído
+**Status do Projeto:** Concluído 
 
 ## Descrição
 
-Este é um projeto de aplicação desktop desenvolvido em Java para demonstrar os conceitos fundamentais de Programação Orientada a Objetos (POO), arquitetura MVC, desenvolvimento de interface gráfica com Swing e persistência de dados com banco de dados relacional (SQLite) via JDBC.
+Este é um projeto de aplicação desktop desenvolvido em Java para demonstrar os conceitos fundamentais de Programação Orientada a Objetos (OOP), arquitetura MVC, desenvolvimento de interface gráfica com Swing e persistência de dados com banco de dados relacional (SQLite) via JDBC.
 
 A aplicação permite o gerenciamento completo de Usuários, Projetos e Equipes, com operações de CRUD (Criar, Ler, Atualizar, Excluir), validação de dados e busca em tempo real.
 
 ## Funcionalidades
 
 -   [x] **CRUD Completo:** Cadastro, Edição, Exclusão e Listagem para Usuários, Projetos e Equipes.
--   **Validação de Dados:** Impede a entrada de dados inválidos (campos em branco, CPFs/E-mails duplicados).
--   **Máscaras de Entrada:** Formatação automática para campos de CPF e Data.
--   **Busca em Tempo Real:** Filtro dinâmico das tabelas conforme o usuário digita.
--   **Relacionamentos:**
+-   [x] **Validação de Dados:** Impede a entrada de dados inválidos (campos em branco, CPFs/E-mails duplicados).
+-   [x] **Máscaras de Entrada:** Formatação automática para campos de CPF e Data.
+-   [x] **Busca em Tempo Real:** Filtro dinâmico das tabelas conforme o usuário digita.
+-   [x] **Relacionamentos:**
     -   Associação de um Gerente (Usuário) a um Projeto.
     -   Associação de Membros (Usuários) a uma Equipe, com visualização.
--   **Persistência de Dados:** Todas as informações são salvas em um banco de dados SQLite local.
+-   [x] **Persistência de Dados:** Todas as informações são salvas em um banco de dados SQLite local.
 
 ## Tecnologias Utilizadas
 
@@ -28,7 +28,7 @@ A aplicação permite o gerenciamento completo de Usuários, Projetos e Equipes,
 -   **IDE:** Apache NetBeans
 -   **Controle de Versão:** Git & GitHub
 
-##  Como Executar
+## Como Executar
 
 1.  **Pré-requisitos:** Ter o Java (JDK ou JRE) versão 11 ou superior instalado.
 2.  **Executando o `.jar`:**
@@ -42,7 +42,7 @@ A aplicação permite o gerenciamento completo de Usuários, Projetos e Equipes,
     -   Delete o arquivo `.db` existente (se houver) para que um novo seja criado.
     -   Execute a classe principal.
 
-##  Autores
+## Autores
 
 -   **[Luis Souza]**
 -   **[Vitória Mariana]**

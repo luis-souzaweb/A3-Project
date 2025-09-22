@@ -63,7 +63,7 @@ public class ProjetoDAO {
                 Projeto projeto = new Projeto(
                     rs.getString("nome"), rs.getString("descricao"), 
                     rs.getString("dataInicio"), rs.getString("dataTerminoPrevista"),
-                    rs.getString("status"), // Usando o novo construtor
+                    rs.getString("status"),
                     gerente
                 );
                 projeto.setId(rs.getInt("id"));

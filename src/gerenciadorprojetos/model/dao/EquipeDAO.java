@@ -84,11 +84,27 @@ public class EquipeDAO {
             System.err.println("Erro ao adicionar membro à equipe: " + e.getMessage());
         }
     }
+    
+    public void adicionarMembros(int equipeId, List<Usuario> membros) {
+        String sql = "INSERT OR IGNORE INTO equipe_membros(equipe_id, usuario_id) VALUES(?,?)";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            conn.setAutoCommit(false);
+            for (Usuario membro : membros) {
+                pstmt.setInt(1, equipeId);
+                pstmt.setInt(2, membro.getId());
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+            conn.commit();
+        } catch (SQLException e) {
+            System.err.println("Erro ao adicionar membros em lote: " + e.getMessage());
+        }
+    }
 
     public List<Equipe> listarTodos() {
         List<Equipe> equipes = new ArrayList<>();
         String sql = "SELECT * FROM equipes";
-
         try (Connection conn = Database.connect();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -103,22 +119,6 @@ public class EquipeDAO {
             System.err.println("Erro ao listar equipes: " + e.getMessage());
         }
         return equipes;
-    }
-        // --- NOVO MÉTODO DE VALIDAÇÃO ---
-    public boolean nomeJaExiste(String nome) {
-        String sql = "SELECT COUNT(*) FROM equipes WHERE nome = ?";
-        try (Connection conn = Database.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, nome);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            System.err.println("Erro ao verificar nome da equipe: " + e.getMessage());
-        }
-        return false;
     }
 
     private void carregarMembrosDaEquipe(Connection conn, Equipe equipe) throws SQLException {
@@ -138,5 +138,20 @@ public class EquipeDAO {
                 equipe.adicionarMembro(membro);
             }
         }
+    }
+    
+    public boolean nomeJaExiste(String nome) {
+        String sql = "SELECT COUNT(*) FROM equipes WHERE nome = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nome);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao verificar nome da equipe: " + e.getMessage());
+        }
+        return false;
     }
 }

@@ -22,7 +22,6 @@ public class UsuarioDAO {
         } catch (SQLException e) {
             System.err.println("Erro ao inserir usuário: " + e.getMessage());
         }
-        
     }
 
     public void atualizar(Usuario usuario) {
@@ -66,7 +65,7 @@ public class UsuarioDAO {
                     rs.getString("email"), rs.getString("cargo"),
                     rs.getString("login"), rs.getString("senha")
                 );
-                usuario.setId(rs.getInt("id")); 
+                usuario.setId(rs.getInt("id"));
                 usuarios.add(usuario);
             }
         } catch (SQLException e) {
@@ -74,20 +73,41 @@ public class UsuarioDAO {
         }
         return usuarios;
     }
-        public boolean cpfJaExiste(String cpf) {
+    
+    public boolean cpfJaExiste(String cpf) {
         String sql = "SELECT COUNT(*) FROM usuarios WHERE cpf = ?";
         try (Connection conn = Database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
             pstmt.setString(1, cpf);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                // Se o resultado for maior que 0, significa que o CPF já existe.
                 return rs.getInt(1) > 0;
             }
         } catch (SQLException e) {
             System.err.println("Erro ao verificar CPF: " + e.getMessage());
         }
-        return false; // Retorna false em caso de erro para não bloquear indevidamente
+        return false;
+    }
+    
+    public List<Usuario> listarGerentes() {
+        List<Usuario> gerentes = new ArrayList<>();
+        String sql = "SELECT * FROM usuarios WHERE cargo = ?";
+        try (Connection conn = Database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, "Gerente");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Usuario usuario = new Usuario(
+                    rs.getString("nomeCompleto"), rs.getString("cpf"),
+                    rs.getString("email"), rs.getString("cargo"),
+                    rs.getString("login"), rs.getString("senha")
+                );
+                usuario.setId(rs.getInt("id"));
+                gerentes.add(usuario);
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar gerentes: " + e.getMessage());
+        }
+        return gerentes;
     }
 }

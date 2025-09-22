@@ -7,8 +7,8 @@ import gerenciadorprojetos.model.dao.EquipeDAO;
 import gerenciadorprojetos.model.dao.ProjetoDAO;
 import gerenciadorprojetos.model.dao.UsuarioDAO;
 import gerenciadorprojetos.view.MainFrame;
+import java.awt.Component;
 import java.text.ParseException;
-import java.util.InputMismatchException;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -49,31 +49,20 @@ public class AppController {
         view.getBtnEditar().addActionListener(e -> editarSelecionado());
         view.getBtnExcluir().addActionListener(e -> excluirSelecionado());
         view.getBtnVerMembros().addActionListener(e -> verMembrosDaEquipe());
-
+        
         view.getTabelaUsuarios().getSelectionModel().addListSelectionListener(e -> atualizarEstadoBotoes());
         view.getTabelaProjetos().getSelectionModel().addListSelectionListener(e -> atualizarEstadoBotoes());
         view.getTabelaEquipes().getSelectionModel().addListSelectionListener(e -> atualizarEstadoBotoes());
-
+        
         view.getPainelAbas().addChangeListener(e -> {
             atualizarEstadoBotoes();
             filtrarTabelas();
         });
-
+        
         view.getCampoBusca().getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                filtrarTabelas();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                filtrarTabelas();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                filtrarTabelas();
-            }
+            @Override public void insertUpdate(DocumentEvent e) { filtrarTabelas(); }
+            @Override public void removeUpdate(DocumentEvent e) { filtrarTabelas(); }
+            @Override public void changedUpdate(DocumentEvent e) { filtrarTabelas(); }
         });
     }
 
@@ -81,11 +70,11 @@ public class AppController {
         DefaultTableModel modelUsuarios = (DefaultTableModel) view.getTabelaUsuarios().getModel();
         sorterUsuarios = new TableRowSorter<>(modelUsuarios);
         view.getTabelaUsuarios().setRowSorter(sorterUsuarios);
-
+        
         DefaultTableModel modelProjetos = (DefaultTableModel) view.getTabelaProjetos().getModel();
         sorterProjetos = new TableRowSorter<>(modelProjetos);
         view.getTabelaProjetos().setRowSorter(sorterProjetos);
-
+        
         DefaultTableModel modelEquipes = (DefaultTableModel) view.getTabelaEquipes().getModel();
         sorterEquipes = new TableRowSorter<>(modelEquipes);
         view.getTabelaEquipes().setRowSorter(sorterEquipes);
@@ -117,12 +106,12 @@ public class AppController {
         if (abaSelecionada == 0) itemSelecionado = view.getTabelaUsuarios().getSelectedRow() != -1;
         else if (abaSelecionada == 1) itemSelecionado = view.getTabelaProjetos().getSelectedRow() != -1;
         else if (abaSelecionada == 2) itemSelecionado = view.getTabelaEquipes().getSelectedRow() != -1;
-
+        
         view.getBtnEditar().setEnabled(itemSelecionado);
         view.getBtnExcluir().setEnabled(itemSelecionado);
         view.getBtnVerMembros().setEnabled(itemSelecionado && abaSelecionada == 2);
     }
-
+    
     private void editarSelecionado() {
         int abaSelecionada = view.getPainelAbas().getSelectedIndex();
         if (abaSelecionada == 0) {
@@ -131,10 +120,7 @@ public class AppController {
             int usuarioId = (int) view.getTabelaUsuarios().getValueAt(selectedRow, 0);
             Usuario usuarioParaEditar = null;
             for (Usuario u : usuarioDAO.listarTodos()) {
-                if (u.getId() == usuarioId) {
-                    usuarioParaEditar = u;
-                    break;
-                }
+                if (u.getId() == usuarioId) { usuarioParaEditar = u; break; }
             }
             if (usuarioParaEditar != null) mostrarDialogoUsuario(usuarioParaEditar);
         } else if (abaSelecionada == 1) {
@@ -143,10 +129,7 @@ public class AppController {
             int projetoId = (int) view.getTabelaProjetos().getValueAt(selectedRow, 0);
             Projeto projetoParaEditar = null;
             for (Projeto p : projetoDAO.listarTodos()) {
-                if (p.getId() == projetoId) {
-                    projetoParaEditar = p;
-                    break;
-                }
+                if (p.getId() == projetoId) { projetoParaEditar = p; break; }
             }
             if (projetoParaEditar != null) mostrarDialogoProjeto(projetoParaEditar);
         } else if (abaSelecionada == 2) {
@@ -155,10 +138,7 @@ public class AppController {
             int equipeId = (int) view.getTabelaEquipes().getValueAt(selectedRow, 0);
             Equipe equipeParaEditar = null;
             for (Equipe e : equipeDAO.listarTodos()) {
-                if (e.getId() == equipeId) {
-                    equipeParaEditar = e;
-                    break;
-                }
+                if (e.getId() == equipeId) { equipeParaEditar = e; break; }
             }
             if (equipeParaEditar != null) mostrarDialogoEquipe(equipeParaEditar);
         }
@@ -198,18 +178,15 @@ public class AppController {
             }
         }
     }
-
+    
     private void verMembrosDaEquipe() {
         int selectedRow = view.getTabelaEquipes().getSelectedRow();
         if (selectedRow == -1) return;
         int equipeId = (int) view.getTabelaEquipes().getValueAt(selectedRow, 0);
         String nomeEquipe = (String) view.getTabelaEquipes().getValueAt(selectedRow, 1);
         Equipe equipeSelecionada = null;
-        for (Equipe e : equipeDAO.listarTodos()) {
-            if (e.getId() == equipeId) {
-                equipeSelecionada = e;
-                break;
-            }
+        for(Equipe e : equipeDAO.listarTodos()){
+            if(e.getId() == equipeId){ equipeSelecionada = e; break; }
         }
         if (equipeSelecionada != null) {
             List<Usuario> membros = equipeSelecionada.getMembros();
@@ -224,82 +201,16 @@ public class AppController {
             JOptionPane.showMessageDialog(view, mensagem.toString(), "Membros da Equipe", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-
-    /**
-     * Valida um CPF através do algoritmo padrão.
-     *
-     * @param cpf O CPF a ser validado, contendo apenas dígitos.
-     * @return true se o CPF for válido, false caso contrário.
-     */
-    private boolean validarCpf(String cpf) {
-        // Remove caracteres não numéricos.
-        cpf = cpf.replaceAll("[^0-9]", "");
-
-        // Considera-se erro CPFs formados por uma sequência de números iguais.
-        if (cpf.equals("00000000000") || cpf.equals("11111111111") ||
-            cpf.equals("22222222222") || cpf.equals("33333333333") ||
-            cpf.equals("44444444444") || cpf.equals("55555555555") ||
-            cpf.equals("66666666666") || cpf.equals("77777777777") ||
-            cpf.equals("88888888888") || cpf.equals("99999999999") ||
-            (cpf.length() != 11)) {
-            return false;
-        }
-
-        char dig10, dig11;
-        int sm, i, r, num, peso;
-
-        try {
-            // Calculo do 1o. Digito Verificador
-            sm = 0;
-            peso = 10;
-            for (i = 0; i < 9; i++) {
-                num = (int) (cpf.charAt(i) - 48);
-                sm = sm + (num * peso);
-                peso = peso - 1;
-            }
-
-            r = 11 - (sm % 11);
-            if ((r == 10) || (r == 11)) {
-                dig10 = '0';
-            } else {
-                dig10 = (char) (r + 48);
-            }
-
-            // Calculo do 2o. Digito Verificador
-            sm = 0;
-            peso = 11;
-            for (i = 0; i < 10; i++) {
-                num = (int) (cpf.charAt(i) - 48);
-                sm = sm + (num * peso);
-                peso = peso - 1;
-            }
-
-            r = 11 - (sm % 11);
-            if ((r == 10) || (r == 11)) {
-                dig11 = '0';
-            } else {
-                dig11 = (char) (r + 48);
-            }
-
-            return (dig10 == cpf.charAt(9)) && (dig11 == cpf.charAt(10));
-        } catch (InputMismatchException erro) {
-            return false;
-        }
-    }
-
+    
     private void mostrarDialogoUsuario(Usuario usuario) {
         boolean isEdit = usuario != null;
         JTextField nomeField = new JTextField(isEdit ? usuario.getNomeCompleto() : "");
         JFormattedTextField cpfField = null;
         try {
             MaskFormatter cpfMask = new MaskFormatter("###.###.###-##");
-            cpfMask.setValidCharacters("0123456789");
             cpfField = new JFormattedTextField(cpfMask);
             if (isEdit) cpfField.setText(usuario.getCpf());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            cpfField = new JFormattedTextField();
-        }
+        } catch (ParseException e) { e.printStackTrace(); cpfField = new JFormattedTextField(); }
         JTextField emailField = new JTextField(isEdit ? usuario.getEmail() : "");
         String[] cargos = {"Colaborador", "Gerente", "Administrador"};
         JComboBox<String> cargoComboBox = new JComboBox<>(cargos);
@@ -309,18 +220,12 @@ public class AppController {
 
         JPanel painel = new JPanel();
         painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
-        painel.add(new JLabel("Nome Completo:"));
-        painel.add(nomeField);
-        painel.add(new JLabel("CPF:"));
-        painel.add(cpfField);
-        painel.add(new JLabel("Email:"));
-        painel.add(emailField);
-        painel.add(new JLabel("Cargo:"));
-        painel.add(cargoComboBox);
-        painel.add(new JLabel("Login:"));
-        painel.add(loginField);
-        painel.add(new JLabel("Senha:"));
-        painel.add(senhaField);
+        painel.add(new JLabel("Nome Completo:")); painel.add(nomeField);
+        painel.add(new JLabel("CPF:")); painel.add(cpfField);
+        painel.add(new JLabel("Email:")); painel.add(emailField);
+        painel.add(new JLabel("Cargo:")); painel.add(cargoComboBox);
+        painel.add(new JLabel("Login:")); painel.add(loginField);
+        painel.add(new JLabel("Senha:")); painel.add(senhaField);
 
         String titulo = isEdit ? "Editar Usuário" : "Adicionar Novo Usuário";
         int resultado = JOptionPane.showConfirmDialog(view, painel, titulo, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -332,26 +237,19 @@ public class AppController {
             String login = loginField.getText().trim();
             String senha = new String(senhaField.getPassword()).trim();
 
-            if (nome.isEmpty() || login.isEmpty() || senha.isEmpty()) {
-                JOptionPane.showMessageDialog(view, "Os campos Nome, Login e Senha são obrigatórios.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+            if (nome.isEmpty() || cpf.length() != 11 || login.isEmpty() || senha.isEmpty()) {
+                JOptionPane.showMessageDialog(view, "Todos os campos (Nome, CPF, Login, Senha) são obrigatórios.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
-            if (!validarCpf(cpf)) {
-                JOptionPane.showMessageDialog(view, "Digite um CPF válido", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
             String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
             if (!email.isEmpty() && !email.matches(emailRegex)) {
                 JOptionPane.showMessageDialog(view, "O formato do e-mail é inválido.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
             if (isEdit) {
                 if (usuarioDAO.cpfJaExiste(cpf) && !cpf.equals(usuario.getCpf())) {
-                    JOptionPane.showMessageDialog(view, "Este CPF já está cadastrado no sistema.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
-                    return;
+                     JOptionPane.showMessageDialog(view, "Este CPF já está cadastrado no sistema.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+                     return;
                 }
             } else {
                 if (usuarioDAO.cpfJaExiste(cpf)) {
@@ -379,13 +277,11 @@ public class AppController {
         }
     }
 
-    private void adicionarUsuario() {
-        mostrarDialogoUsuario(null);
-    }
+    private void adicionarUsuario() { mostrarDialogoUsuario(null); }
 
     private void mostrarDialogoProjeto(Projeto projeto) {
         boolean isEdit = projeto != null;
-        List<Usuario> usuarios = usuarioDAO.listarTodos();
+        List<Usuario> gerentes = usuarioDAO.listarGerentes();
         JTextField nomeField = new JTextField(isEdit ? projeto.getNome() : "");
         JTextField descField = new JTextField(isEdit ? projeto.getDescricao() : "");
         JFormattedTextField dataInicioField = null;
@@ -396,16 +292,14 @@ public class AppController {
             if (isEdit) dataInicioField.setText(projeto.getDataInicio());
             dataTerminoField = new JFormattedTextField(dateMask);
             if (isEdit) dataTerminoField.setText(projeto.getDataTerminoPrevista());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        } catch (ParseException e) { e.printStackTrace(); }
         String[] statusOptions = {"Planejado", "Em Andamento", "Concluído", "Cancelado"};
         JComboBox<String> statusComboBox = new JComboBox<>(statusOptions);
         if (isEdit) statusComboBox.setSelectedItem(projeto.getStatus());
-        JComboBox<Usuario> gerenteComboBox = new JComboBox<>(usuarios.toArray(new Usuario[0]));
+        JComboBox<Usuario> gerenteComboBox = new JComboBox<>(gerentes.toArray(new Usuario[0]));
         if (isEdit && projeto.getGerente() != null) {
-            for (int i = 0; i < usuarios.size(); i++) {
-                if (usuarios.get(i).getId() == projeto.getGerente().getId()) {
+            for (int i = 0; i < gerentes.size(); i++) {
+                if (gerentes.get(i).getId() == projeto.getGerente().getId()) {
                     gerenteComboBox.setSelectedIndex(i);
                     break;
                 }
@@ -414,19 +308,13 @@ public class AppController {
 
         JPanel painel = new JPanel();
         painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
-        painel.add(new JLabel("Nome do Projeto:"));
-        painel.add(nomeField);
-        painel.add(new JLabel("Descrição:"));
-        painel.add(descField);
-        painel.add(new JLabel("Data de Início (dd/mm/aaaa):"));
-        painel.add(dataInicioField);
-        painel.add(new JLabel("Data de Término (dd/mm/aaaa):"));
-        painel.add(dataTerminoField);
-        painel.add(new JLabel("Status:"));
-        painel.add(statusComboBox);
-        painel.add(new JLabel("Gerente Responsável:"));
-        painel.add(gerenteComboBox);
-
+        painel.add(new JLabel("Nome do Projeto:")); painel.add(nomeField);
+        painel.add(new JLabel("Descrição:")); painel.add(descField);
+        painel.add(new JLabel("Data de Início (dd/mm/aaaa):")); painel.add(dataInicioField);
+        painel.add(new JLabel("Data de Término (dd/mm/aaaa):")); painel.add(dataTerminoField);
+        painel.add(new JLabel("Status:")); painel.add(statusComboBox);
+        painel.add(new JLabel("Gerente Responsável:")); painel.add(gerenteComboBox);
+        
         String titulo = isEdit ? "Editar Projeto" : "Adicionar Novo Projeto";
         int resultado = JOptionPane.showConfirmDialog(view, painel, titulo, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
@@ -457,8 +345,8 @@ public class AppController {
     }
 
     private void adicionarProjeto() {
-        if (usuarioDAO.listarTodos().isEmpty()) {
-            JOptionPane.showMessageDialog(view, "Cadastre um usuário antes de criar um projeto.", "Erro", JOptionPane.ERROR_MESSAGE);
+        if (usuarioDAO.listarTodos().isEmpty()) { // Pode checar listarGerentes() se preferir
+            JOptionPane.showMessageDialog(view, "Cadastre ao menos um usuário com o cargo 'Gerente' antes de criar um projeto.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
         mostrarDialogoProjeto(null);
@@ -468,13 +356,11 @@ public class AppController {
         boolean isEdit = equipe != null;
         JTextField nomeField = new JTextField(isEdit ? equipe.getNome() : "");
         JTextField descField = new JTextField(isEdit ? equipe.getDescricao() : "");
-
+        
         JPanel painel = new JPanel();
         painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
-        painel.add(new JLabel("Nome da Equipe:"));
-        painel.add(nomeField);
-        painel.add(new JLabel("Descrição:"));
-        painel.add(descField);
+        painel.add(new JLabel("Nome da Equipe:")); painel.add(nomeField);
+        painel.add(new JLabel("Descrição:")); painel.add(descField);
 
         String titulo = isEdit ? "Editar Equipe" : "Adicionar Nova Equipe";
         int resultado = JOptionPane.showConfirmDialog(view, painel, titulo, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -487,8 +373,8 @@ public class AppController {
             }
             if (isEdit) {
                 if (equipeDAO.nomeJaExiste(nome) && !nome.equals(equipe.getNome())) {
-                    JOptionPane.showMessageDialog(view, "Este nome de equipe já está em uso.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
-                    return;
+                     JOptionPane.showMessageDialog(view, "Este nome de equipe já está em uso.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+                     return;
                 }
             } else {
                 if (equipeDAO.nomeJaExiste(nome)) {
@@ -510,9 +396,7 @@ public class AppController {
         }
     }
 
-    private void adicionarEquipe() {
-        mostrarDialogoEquipe(null);
-    }
+    private void adicionarEquipe() { mostrarDialogoEquipe(null); }
 
     private void adicionarMembroAEquipe() {
         List<Equipe> equipes = equipeDAO.listarTodos();
@@ -521,13 +405,21 @@ public class AppController {
             JOptionPane.showMessageDialog(view, "É necessário ter ao menos uma equipe e um usuário cadastrados.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        Equipe equipeSelecionada = (Equipe) JOptionPane.showInputDialog(view, "Selecione a Equipe:", "Adicionar Membro", JOptionPane.PLAIN_MESSAGE, null, equipes.toArray(), equipes.get(0));
+        Equipe equipeSelecionada = (Equipe) JOptionPane.showInputDialog(view, "Selecione a Equipe:", "Adicionar Membros", JOptionPane.PLAIN_MESSAGE, null, equipes.toArray(), equipes.get(0));
         if (equipeSelecionada == null) return;
-        Usuario membroSelecionado = (Usuario) JOptionPane.showInputDialog(view, "Selecione o Usuário:", "Adicionar Membro", JOptionPane.PLAIN_MESSAGE, null, usuarios.toArray(), usuarios.get(0));
-        if (membroSelecionado != null) {
-            equipeDAO.adicionarMembro(equipeSelecionada.getId(), membroSelecionado.getId());
-            atualizarTodasTabelas();
-            JOptionPane.showMessageDialog(view, "Membro '" + membroSelecionado.getNomeCompleto() + "' adicionado à equipe '" + equipeSelecionada.getNome() + "'.");
+        
+        JList<Usuario> listaUsuarios = new JList<>(usuarios.toArray(new Usuario[0]));
+        listaUsuarios.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    
+        int resultado = JOptionPane.showConfirmDialog(view, new JScrollPane(listaUsuarios), "Selecione os Membros (use Ctrl+Click)", JOptionPane.OK_CANCEL_OPTION);
+
+        if (resultado == JOptionPane.OK_OPTION) {
+            List<Usuario> membrosSelecionados = listaUsuarios.getSelectedValuesList();
+            if (!membrosSelecionados.isEmpty()) {
+                equipeDAO.adicionarMembros(equipeSelecionada.getId(), membrosSelecionados);
+                atualizarTodasTabelas();
+                JOptionPane.showMessageDialog(view, membrosSelecionados.size() + " membro(s) adicionado(s) com sucesso!");
+            }
         }
     }
 }
